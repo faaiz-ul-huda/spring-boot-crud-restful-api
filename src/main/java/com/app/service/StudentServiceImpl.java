@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.app.dao.StudentDao;
 import com.app.entity.Student;
+import com.app.custom_exception.ResourceNotFoundException;
 
 @Service
 @Transactional
@@ -21,12 +22,12 @@ private StudentDao studentdao;
 	}
 	@Override
 	public Student updateStudentsDetail(Student stud) {
-		Student foundStudent=studentdao.findById(stud.getId()).orElseThrow();
+		Student foundStudent=studentdao.findById(stud.getId()).orElseThrow(()-> new ResourceNotFoundException("student not found"));
 		return studentdao.save(stud);
 	}
 	@Override
 	public String deleteStudentDetails(Long studentId) {
-		Student foundStudent=studentdao.findById(studentId).orElseThrow();
+		Student foundStudent=studentdao.findById(studentId).orElseThrow(()-> new ResourceNotFoundException("student not found to be deleted"));
 		studentdao.delete(foundStudent);
 		
 		return "Student datails deleted succesfully";
@@ -38,7 +39,7 @@ private StudentDao studentdao;
 	}
 	@Override
 	public Student getStudentDetailsById(Long studentId) {
-		Student foundStudent=studentdao.findById(studentId).orElseThrow();
+		Student foundStudent=studentdao.findById(studentId).orElseThrow(()-> new ResourceNotFoundException("student with this id can't exist"));
 		
 		return foundStudent;
 	}
